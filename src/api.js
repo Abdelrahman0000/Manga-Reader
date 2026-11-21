@@ -19,11 +19,49 @@ function qs(params) {
   return sp.toString()
 }
 
+// MangaDex availability tracking so the UI can show an honest outage state
+// and point to external Arabic sources instead of failing silently.
+const statusListeners = new Set()
+let sourceDown = false
+export function onSourceStatus(cb) {
+  statusListeners.add(cb)
+  cb(sourceDown)
+  return () => statusListeners.delete(cb)
+}
+export function isSourceDown() {
+  return sourceDown
+}
+function setSourceDown(v) {
+  if (sourceDown === v) return
+  sourceDown = v
+  statusListeners.forEach((cb) => cb(v))
+}
+
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
+
+async function fetchJSON(url, tries = 3) {
+  let lastErr
+  for (let i = 0; i < tries; i++) {
+    try {
+      const res = await fetch(prox(url))
+      if (res.ok) {
+        setSourceDown(false)
+        return await res.json()
+      }
+      lastErr = new Error(`MangaDex ${res.status}`)
+      // 4xx (except 429) won't heal by retrying
+      if (res.status >= 400 && res.status < 500 && res.status !== 429) break
+    } catch (e) {
+      lastErr = e
+    }
+    await sleep(700 * (i + 1))
+  }
+  setSourceDown(true)
+  throw lastErr
+}
+
 async function get(path, params) {
-  const url = `${API}${path}?${qs(params)}`
-  const res = await fetch(prox(url))
-  if (!res.ok) throw new Error(`MangaDex ${res.status}`)
-  return res.json()
+  return fetchJSON(`${API}${path}?${qs(params)}`)
 }
 
 export function coverUrl(manga, size = 256) {
@@ -74,9 +112,7 @@ export async function searchManga(title, offset = 0, limit = 24) {
 }
 
 export async function fetchManga(id) {
-  const res = await fetch(prox(`${API}/manga/${id}?${qs({ includes: ['cover_art', 'author', 'artist'] })}`))
-  if (!res.ok) throw new Error(`MangaDex ${res.status}`)
-  const json = await res.json()
+  const json = await fetchJSON(`${API}/manga/${id}?${qs({ includes: ['cover_art', 'author', 'artist'] })}`)
   return json.data
 }
 
@@ -102,9 +138,7 @@ export async function fetchChapters(mangaId) {
     sp.set('offset', offset)
     CONTENT_RATINGS.forEach((r) => sp.append('contentRating[]', r))
     sp.append('includes[]', 'scanlation_group')
-    const res = await fetch(prox(`${API}/manga/${mangaId}/feed?${sp}`))
-    if (!res.ok) throw new Error(`MangaDex ${res.status}`)
-    const json = await res.json()
+    const json = await fetchJSON(`${API}/manga/${mangaId}/feed?${sp}`)
     all.push(...json.data)
     if (offset + limit >= json.total) break
     offset += limit
@@ -125,9 +159,7 @@ export function chapterGroup(ch) {
 }
 
 export async function fetchChapterPages(chapterId) {
-  const res = await fetch(prox(`${API}/at-home/server/${chapterId}`))
-  if (!res.ok) throw new Error(`MangaDex ${res.status}`)
-  const json = await res.json()
+  const json = await fetchJSON(`${API}/at-home/server/${chapterId}`)
   const { baseUrl, chapter } = json
   const mk = (mode, files) => files.map((f) => prox(`${baseUrl}/${mode}/${chapter.hash}/${f}`))
   return {

@@ -62,6 +62,29 @@ export function MangaGrid({ items, stats }) {
   )
 }
 
+// External Arabic manga sites, offered explicitly when MangaDex coverage is
+// incomplete or the source is down. These open in a new tab on the site itself —
+// we never mirror their content inside the app.
+export function ExternalSources({ title }) {
+  const q = encodeURIComponent(title || '')
+  const links = [
+    { name: 'مانجا ليك', url: q ? `https://lekmanga.net/?s=${q}` : 'https://lekmanga.net/' },
+    { name: 'مانجا سوات', url: 'https://meshmanga.com/menu' },
+    { name: 'ازورا مانجا', url: 'https://azorafly.com/series' },
+    { name: 'فريق العسق', url: q ? `https://3asq.online/?s=${q}&post_type=wp-manga` : 'https://3asq.online/' },
+  ]
+  return (
+    <div className="external-sources">
+      <p className="external-title">تدور على فصول مش موجودة هنا؟ ابحث في مواقع مانجا عربية أخرى (تفتح في موقعها):</p>
+      <div className="external-links">
+        {links.map((l) => (
+          <a key={l.name} className="btn btn-small" href={l.url} target="_blank" rel="noopener noreferrer">{l.name} ↗</a>
+        ))}
+      </div>
+    </div>
+  )
+}
+
 export function Spinner({ label = 'جاري التحميل…' }) {
   return <div className="spinner-wrap"><div className="spinner" /><p>{label}</p></div>
 }
@@ -70,6 +93,7 @@ export function ErrorNote({ error, onRetry }) {
   return (
     <div className="error-note">
       <p>حدث خطأ أثناء الاتصال بالمصدر: {String(error.message || error)}</p>
+      <p className="error-hint">المصدر الأساسي (MangaDex) قد يكون متوقفًا مؤقتًا — جرّب إعادة المحاولة بعد قليل.</p>
       {onRetry && <button className="btn" onClick={onRetry}>إعادة المحاولة</button>}
     </div>
   )

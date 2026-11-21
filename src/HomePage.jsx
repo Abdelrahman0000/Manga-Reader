@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react'
 import { fetchPopular, fetchRecent, searchManga, fetchStats } from './api.js'
-import { MangaGrid, Spinner, ErrorNote } from './ui.jsx'
+import { MangaGrid, Spinner, ErrorNote, ExternalSources } from './ui.jsx'
 
 const PAGE = 24
 
@@ -49,6 +49,7 @@ export default function HomePage({ query }) {
       )}
       {searching && <h2 className="section-title">نتائج البحث عن «{query.trim()}»</h2>}
       {error && <ErrorNote error={error} onRetry={() => load(0, false)} />}
+      {error && <ExternalSources title={searching ? query.trim() : ''} />}
       {loading ? <Spinner /> : (
         <>
           <MangaGrid items={items} stats={stats} />

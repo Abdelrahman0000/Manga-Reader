@@ -185,3 +185,102 @@ button { font-family: inherit; cursor: pointer; }
   .download-bar { justify-content: stretch; }
   .download-bar .btn { flex: 1; }
 }
+
+/* ===== v2: chapter number grid, filters, coverage & external sources ===== */
+.chapter-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin: 12px 0 16px;
+}
+.order-toggle { display: flex; gap: 6px; }
+
+.chapter-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(72px, 1fr));
+  gap: 8px;
+}
+.chapter-chip {
+  position: relative;
+  border: 1px solid rgba(255,255,255,.1);
+  border-radius: 10px;
+  background: var(--surface);
+  transition: border-color .15s ease, background .15s ease;
+}
+.chapter-chip:hover { border-color: var(--accent); }
+.chapter-chip.read { opacity: .55; }
+.chip-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 12px 6px;
+  color: inherit;
+  text-decoration: none;
+  font-weight: 700;
+}
+.chip-num { font-size: 15px; }
+.chip-read-mark { color: #4ade80; font-size: 12px; }
+.chip-toggle {
+  position: absolute;
+  top: -7px;
+  inset-inline-end: -7px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,.1);
+  background: var(--surface);
+  color: inherit;
+  font-size: 11px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0;
+}
+.chip-toggle:hover { border-color: var(--accent); }
+
+.coverage-note {
+  background: rgba(250, 204, 21, .08);
+  border: 1px solid rgba(250, 204, 21, .35);
+  border-radius: 10px;
+  padding: 10px 14px;
+  margin: 10px 0;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.external-sources {
+  margin-top: 16px;
+  border-top: 1px dashed rgba(255,255,255,.1);
+  padding-top: 12px;
+}
+.external-title { font-size: 14px; margin: 0 0 8px; }
+.external-links { display: flex; flex-wrap: wrap; gap: 8px; }
+
+.source-banner {
+  background: rgba(248, 113, 113, .1);
+  border-bottom: 1px solid rgba(248, 113, 113, .4);
+  padding: 10px 16px;
+}
+.source-banner p { margin: 0 0 6px; font-size: 14px; }
+.source-banner .external-sources { margin-top: 0; border-top: none; padding-top: 0; }
+
+.error-hint { font-size: 13px; opacity: .8; margin-top: 4px; }
+
+.chip-dl {
+  position: absolute;
+  top: -7px;
+  inset-inline-start: -7px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,.1);
+  background: var(--surface);
+  color: inherit;
+  font-size: 11px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0;
+}
+.chip-dl:hover:not(:disabled) { border-color: var(--accent); }
+.chip-dl:disabled { opacity: .5; cursor: default; }

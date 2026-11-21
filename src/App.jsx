@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Routes, Route, useSearchParams } from 'react-router-dom'
-import { Header } from './ui.jsx'
+import { Header, ExternalSources } from './ui.jsx'
+import { onSourceStatus } from './api.js'
 import HomePage from './HomePage.jsx'
 import { LocalListPage } from './ListPage.jsx'
 import MangaPage from './MangaPage.jsx'
@@ -19,9 +20,19 @@ export default function App() {
     if (q !== null) setQuery(q)
   }, [params])
 
+  // Show an honest banner whenever the MangaDex API stops answering.
+  const [sourceDown, setSourceDown] = useState(false)
+  useEffect(() => onSourceStatus(setSourceDown), [])
+
   return (
     <div className="app">
       <Header query={query} setQuery={setQuery} />
+      {sourceDown && (
+        <div className="source-banner" role="alert">
+          <p>المصدر الأساسي (MangaDex) لا يرد حاليًا — سنحاول تلقائيًا مع كل تحميل. إلى أن يعود:</p>
+          <ExternalSources title="" />
+        </div>
+      )}
       <Routes>
         <Route path="/" element={<HomePage query={query} />} />
         <Route path="/list" element={<LocalListPage query={query} kind="list" />} />
@@ -31,7 +42,7 @@ export default function App() {
         <Route path="*" element={<main className="page"><p className="empty-note">الصفحة غير موجودة.</p></main>} />
       </Routes>
       <footer className="site-footer">
-        <p>المحتوى مقدم عبر MangaDex — الترجمات العربية من فرق الفحص المتطوعة وتغطيتها غير كاملة لكل العناوين.</p>
+        <p>المحتوى مقدم عبر MangaDex — الترجمات العربية من فرق الفحص المتطوعة وتغطيتها غير كاملة لكل العناوين. عند نقص التغطية أو تعطل المصدر نحيلك لمواقع مانجا عربية أخرى لتتصفحها في موقعها.</p>
         <p>صنع بواسطة <strong>عبدالرحمن خليفة</strong> © {new Date().getFullYear()}</p>
       </footer>
     </div>
