@@ -251,23 +251,25 @@ export default function MangaPage() {
                         <span className="chip-num">{chapterNum(ch)}</span>
                         {read && <span className="chip-read-mark" aria-label="مقروء">✓</span>}
                       </Link>
-                      <button
-                        className="chip-toggle"
-                        onClick={() => onToggleRead(ch)}
-                        aria-pressed={read}
-                        title={read ? 'إلغاء علامة القراءة' : 'وضع علامة مقروء'}
-                      >
-                        {read ? '✕' : '✓'}
-                      </button>
-                      <button
-                        className="chip-dl"
-                        onClick={() => onDownloadOne(ch)}
-                        disabled={!!dlChapter}
-                        title={`تنزيل فصل ${chapterNum(ch)}`}
-                        aria-label={`تنزيل فصل ${chapterNum(ch)}`}
-                      >
-                        {dlChapter === ch.id ? '…' : '⬇'}
-                      </button>
+                      <div className="chip-actions">
+                        <button
+                          className="chip-toggle"
+                          onClick={() => onToggleRead(ch)}
+                          aria-pressed={read}
+                          title={read ? 'إلغاء علامة القراءة' : 'وضع علامة مقروء'}
+                        >
+                          {read ? '✕' : '✓'}
+                        </button>
+                        <button
+                          className="chip-dl"
+                          onClick={() => onDownloadOne(ch)}
+                          disabled={!!dlChapter}
+                          title={`تنزيل فصل ${chapterNum(ch)}`}
+                          aria-label={`تنزيل فصل ${chapterNum(ch)}`}
+                        >
+                          {dlChapter === ch.id ? '…' : '⬇'}
+                        </button>
+                      </div>
                     </div>
                   )
                 })}
