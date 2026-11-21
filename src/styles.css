@@ -201,6 +201,9 @@ button { font-family: inherit; cursor: pointer; }
   grid-template-columns: repeat(auto-fill, minmax(72px, 1fr));
   gap: 8px;
 }
+@media (max-width: 480px) {
+  .chapter-grid { grid-template-columns: repeat(3, 1fr); }
+}
 .chapter-chip {
   position: relative;
   border: 1px solid rgba(255,255,255,.1);
@@ -222,22 +225,24 @@ button { font-family: inherit; cursor: pointer; }
 }
 .chip-num { font-size: 15px; }
 .chip-read-mark { color: #4ade80; font-size: 12px; }
-.chip-toggle {
-  position: absolute;
-  top: -7px;
-  inset-inline-end: -7px;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  border: 1px solid rgba(255,255,255,.1);
-  background: var(--surface);
+.chip-actions {
+  display: flex;
+  border-top: 1px solid rgba(255,255,255,.08);
+}
+.chip-actions button {
+  flex: 1;
+  min-height: 44px;
+  background: none;
+  border: none;
   color: inherit;
-  font-size: 11px;
+  font-size: 14px;
   line-height: 1;
   cursor: pointer;
-  padding: 0;
+  padding: 6px 0;
 }
-.chip-toggle:hover { border-color: var(--accent); }
+.chip-actions button + button { border-inline-start: 1px solid rgba(255,255,255,.08); }
+.chip-toggle:hover, .chip-dl:hover:not(:disabled) { color: var(--accent); }
+.chip-toggle:active, .chip-dl:active:not(:disabled) { background: rgba(255,255,255,.06); }
 
 .coverage-note {
   background: rgba(250, 204, 21, .08);
@@ -267,20 +272,4 @@ button { font-family: inherit; cursor: pointer; }
 
 .error-hint { font-size: 13px; opacity: .8; margin-top: 4px; }
 
-.chip-dl {
-  position: absolute;
-  top: -7px;
-  inset-inline-start: -7px;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  border: 1px solid rgba(255,255,255,.1);
-  background: var(--surface);
-  color: inherit;
-  font-size: 11px;
-  line-height: 1;
-  cursor: pointer;
-  padding: 0;
-}
-.chip-dl:hover:not(:disabled) { border-color: var(--accent); }
 .chip-dl:disabled { opacity: .5; cursor: default; }
