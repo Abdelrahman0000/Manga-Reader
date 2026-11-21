@@ -89,11 +89,15 @@ export default function MangaPage() {
   const unread = (chapters || []).filter((c) => !readSet.has(c.id))
   const chapterNum = (c) => c.attributes?.chapter || '؟'
 
-  // Honest coverage: MangaDex announces the latest chapter of the work itself;
-  // Arabic scanlations usually lag far behind it.
+  // Honest coverage from the source's own numbers: if the highest Arabic chapter
+  // number exceeds the number of available Arabic chapters, intermediate chapters
+  // are missing in Arabic. MangaDex's lastChapter (when set) tells how far the
+  // work itself has gone.
   const lastCh = parseFloat(manga.attributes?.lastChapter)
   const arMax = (chapters || []).reduce((m, c) => Math.max(m, chapterSortValue(c)), 0)
-  const partialCoverage = chapters && Number.isFinite(lastCh) && lastCh > arMax + 0.5
+  const gapsInArabic = chapters && chapters.length > 0 && arMax > chapters.length
+  const behindWork = chapters && Number.isFinite(lastCh) && lastCh > arMax + 0.5
+  const partialCoverage = Boolean(gapsInArabic || behindWork)
 
   const onToggleList = () => { toggleMyList(snap); setInList(inMyList(id)) }
   const onToggleDone = () => { toggleReadList(snap); setInDone(inReadList(id)) }
@@ -196,8 +200,8 @@ export default function MangaPage() {
         )}
         {partialCoverage && (
           <p className="coverage-note">
-            المتاح بالعربية هنا {chapters.length} فصلًا (حتى فصل {arMax}) بينما آخر فصل للعمل نفسه {manga.attributes.lastChapter}.
-            الترجمة العربية على هذا المصدر غير مكتملة لهذا العنوان.
+            الترجمة العربية على MangaDex غير مكتملة لهذا العنوان: متاح {chapters.length} فصلًا حتى فصل {arMax}
+            {behindWork ? ` بينما وصل العمل نفسه للفصل ${manga.attributes.lastChapter}` : '، وفيه أرقام فصول غير مترجمة للعربية'}.
           </p>
         )}
 
