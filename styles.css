@@ -147,6 +147,8 @@ button { font-family: inherit; cursor: pointer; }
 .chapter-row.read .chapter-num::after { content: ' ✓'; color: var(--ok); }
 .chapter-name { color: var(--muted); font-size: 0.85rem; }
 .chapter-pages { color: var(--muted); font-size: 0.8rem; margin-inline-start: auto; }
+.chapter-group { color: var(--accent-2); font-size: 0.78rem; }
+.reader-group { display: block; color: var(--accent-2); font-size: 0.72rem; font-weight: 600; }
 .read-toggle {
   background: none; border: 1px solid #2c3342; color: var(--muted);
   border-radius: 8px; padding: 4px 10px; font-size: 0.78rem; white-space: nowrap;

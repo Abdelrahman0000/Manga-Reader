@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { Link, useParams, useNavigate } from 'react-router-dom'
-import { fetchChapterPages, fetchChapters, fetchManga, mangaTitle } from './api.js'
+import { fetchChapterPages, fetchChapters, fetchManga, mangaTitle, chapterGroup } from './api.js'
 import { markChapter } from './store.js'
 import { Spinner, ErrorNote } from './ui.jsx'
 
@@ -43,7 +43,7 @@ export default function ReaderPage() {
     <main className="reader-page">
       <div className="reader-bar">
         <Link to={`/manga/${mangaId}`} className="btn btn-small">→ رجوع</Link>
-        <div className="reader-title">{title} {num && `— فصل ${num}`}</div>
+        <div className="reader-title">{title} {num && `— فصل ${num}`}{current && chapterGroup(current) && <span className="reader-group">ترجمة: {chapterGroup(current)}</span>}</div>
         <div className="reader-nav">
           <button className="btn btn-small" disabled={!prev} onClick={() => navigate(`/read/${mangaId}/${prev.id}`)}>السابق</button>
           <button className="btn btn-small" disabled={!next} onClick={() => navigate(`/read/${mangaId}/${next.id}`)}>التالي</button>

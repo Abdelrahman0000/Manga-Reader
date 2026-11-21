@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import {
-  fetchManga, fetchChapters, fetchStats, coverUrl, mangaTitle, mangaAltTitle, mangaDescription, mangaAuthor,
+  fetchManga, fetchChapters, fetchStats, coverUrl, mangaTitle, mangaAltTitle, mangaDescription, mangaAuthor, chapterGroup,
 } from './api.js'
 import {
   snapshotManga, inMyList, toggleMyList, inReadList, toggleReadList, getReadChapters, markChapter,
@@ -151,6 +151,7 @@ export default function MangaPage() {
                   <Link to={`/read/${id}/${ch.id}`} className="chapter-link">
                     <span className="chapter-num">فصل {chapterNum(ch)}</span>
                     {ch.attributes?.title && <span className="chapter-name">{ch.attributes.title}</span>}
+                    {chapterGroup(ch) && <span className="chapter-group">{chapterGroup(ch)}</span>}
                     <span className="chapter-pages">{ch.attributes.pages} صفحة</span>
                   </Link>
                   <button

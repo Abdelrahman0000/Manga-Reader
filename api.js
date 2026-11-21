@@ -119,6 +119,11 @@ export async function fetchChapters(mangaId) {
   return [...seen.values()].filter((c) => c.attributes.pages > 0)
 }
 
+export function chapterGroup(ch) {
+  const rel = (ch.relationships || []).find((r) => r.type === 'scanlation_group')
+  return rel?.attributes?.name || ''
+}
+
 export async function fetchChapterPages(chapterId) {
   const res = await fetch(prox(`${API}/at-home/server/${chapterId}`))
   if (!res.ok) throw new Error(`MangaDex ${res.status}`)
